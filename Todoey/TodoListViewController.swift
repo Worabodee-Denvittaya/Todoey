@@ -11,9 +11,17 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["First", "Second", "Third"]
+    
+    let defaults = UserDefaults.standard
+    //UserDefaults are saved in a plist file so it has to be a value, key
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "todoListArray") as? [String] {
+            itemArray = items
+        } // retrieve the saved items from the plist file if they exist
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -45,6 +53,7 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new todo list item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             self.itemArray.append(textField.text!)
+            self.defaults.set(self.itemArray, forKey: "todoListArray")
             self.tableView.reloadData()
         }
         alert.addAction(action)
